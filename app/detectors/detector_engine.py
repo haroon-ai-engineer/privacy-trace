@@ -1,10 +1,17 @@
-from app.detectors.email_detector import detect_emails
+from app.detectors.email_detector import EmailDetector
 from app.models.finding import Finding
 
 
-def run_all_detectors(text: str) -> list[Finding]:
-    findings: list[Finding] = []
+class DetectionEngine:
+    def __init__(self) -> None:
+        self.detectors = [
+            EmailDetector(),
+        ]
 
-    findings.extend(detect_emails(text))
+    def scan(self, text: str) -> list[Finding]:
+        findings: list[Finding] = []
 
-    return findings
+        for detector in self.detectors:
+            findings.extend(detector.scan(text))
+
+        return findings

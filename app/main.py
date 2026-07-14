@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.models.request import ScanRequest
-from app.detectors.detector_engine import run_all_detectors
+from app.detectors.detector_engine import DetectionEngine
 
 app = FastAPI(
     title="Privacy Trace API",
@@ -24,9 +24,12 @@ def health_check():
     }
 
 
+engine = DetectionEngine()
+
+
 @app.post("/scan")
 def scan_text(request: ScanRequest):
-    findings = run_all_detectors(request.text)
+    findings = engine.scan(request.text)
 
     return {
         "success": True,
